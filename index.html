@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Score Four — 3D Connect Four</title>
+  <meta name="description" content="Score Four: a premium 3D Connect Four for two. Play on one device, online with a room code, or against the computer.">
+  <meta name="theme-color" content="#07080d">
+  <meta name="color-scheme" content="dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Score Four">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js">
+</head>
+<body>
+  <!-- Inline icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+      <symbol id="i-view" viewBox="0 0 24 24"><path d="M4 9V5a1 1 0 0 1 1-1h4"/><path d="M15 4h4a1 1 0 0 1 1 1v4"/><path d="M20 15v4a1 1 0 0 1-1 1h-4"/><path d="M9 20H5a1 1 0 0 1-1-1v-4"/><circle cx="12" cy="12" r="2.2"/></symbol>
+      <symbol id="i-sound-on" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+      <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/></symbol>
+      <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4"/><path d="m8 8 4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9.5" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/></symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+      <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 1 1 3.9 2.2c-.9.5-1.4 1.1-1.4 2.1"/><path d="M12 17.2v.1"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></symbol>
+    </defs>
+  </svg>
+
+  <canvas id="stage" tabindex="0" role="application"
+          aria-label="Score Four 3D board. Use the arrow keys to choose a peg and Enter to drop a sphere. Drag to rotate the view."></canvas>
+
+  <!-- Screen-reader announcements -->
+  <div id="sr-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ───────────── MAIN MENU ───────────── -->
+  <main id="menu" class="screen is-active" tabindex="-1" aria-labelledby="game-title">
+    <header class="brand">
+      <p class="eyebrow">3D Connect&nbsp;Four</p>
+      <h1 id="game-title" class="title"><span class="t1">Score</span><span class="t2">Four</span></h1>
+      <p class="tagline">Stack spheres on the pegs. Line up four in any direction&nbsp;— flat, upright or through space.</p>
+    </header>
+
+    <section class="panel glass menu-panel" aria-label="Choose a game mode">
+      <button class="btn btn-primary mode" data-mode="local" type="button">
+        <svg class="ico" aria-hidden="true"><use href="#i-users"/></svg>
+        <span class="btn-text"><b>Pass &amp; Play</b><small>Two players, one device</small></span>
+        <span class="last-badge">Last played</span>
+      </button>
+
+      <div class="ai-group">
+        <button class="btn mode" data-mode="ai" type="button">
+          <svg class="ico" aria-hidden="true"><use href="#i-cpu"/></svg>
+          <span class="btn-text"><b>Vs Computer</b><small>Minimax AI opponent</small></span>
+          <span class="last-badge">Last played</span>
+        </button>
+        <div class="seg" role="radiogroup" aria-label="Computer difficulty">
+          <button type="button" role="radio" aria-checked="false" data-diff="easy">Easy</button>
+          <button type="button" role="radio" aria-checked="true" data-diff="medium">Medium</button>
+          <button type="button" role="radio" aria-checked="false" data-diff="hard">Hard</button>
+        </div>
+      </div>
+
+      <button class="btn mode" data-mode="online" type="button">
+        <svg class="ico" aria-hidden="true"><use href="#i-globe"/></svg>
+        <span class="btn-text"><b>Play Online</b><small>Share a 4-letter room code</small></span>
+        <span class="last-badge">Last played</span>
+      </button>
+
+      <div class="menu-foot">
+        <button class="btn btn-ghost" id="btn-howto" type="button">
+          <svg class="ico" aria-hidden="true"><use href="#i-help"/></svg><span>How to play</span>
+        </button>
+        <button class="switch" id="sw-sound" type="button" role="switch" aria-checked="true" aria-label="Sound effects">
+          <svg class="ico" aria-hidden="true"><use href="#i-sound-on"/></svg><span>Sound</span>
+        </button>
+        <button class="switch" id="sw-confirm" type="button" role="switch" aria-checked="true" aria-label="Touch: tap twice to drop">
+          <svg class="ico" aria-hidden="true"><use href="#i-view"/></svg><span>Tap twice</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ───────────── ONLINE LOBBY ───────────── -->
+  <section id="lobby" class="screen lobby" tabindex="-1" aria-labelledby="lobby-title">
+    <div class="panel glass lobby-panel">
+      <button class="btn btn-ghost back" id="lobby-back" type="button">
+        <svg class="ico" aria-hidden="true"><use href="#i-back"/></svg><span>Back</span>
+      </button>
+      <h2 id="lobby-title" class="h2">Play online</h2>
+
+      <div id="lobby-choose" class="stack">
+        <button class="btn btn-primary" id="btn-create" type="button">
+          <span class="btn-text"><b>Create a room</b><small>You play Player 1 · light spheres</small></span>
+        </button>
+        <button class="btn" id="btn-joinview" type="button">
+          <span class="btn-text"><b>Join a room</b><small>Enter your friend’s code</small></span>
+        </button>
+      </div>
+
+      <div id="lobby-host" class="stack" hidden>
+        <p class="muted">Share this code or link with your friend</p>
+        <div class="code" id="room-code" role="img" aria-label="Room code"></div>
+        <div class="row">
+          <button class="btn" id="btn-copy" type="button"><svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy link</span></button>
+          <button class="btn" id="btn-share" type="button" hidden><svg class="ico" aria-hidden="true"><use href="#i-share"/></svg><span>Share</span></button>
+        </div>
+        <p class="status" id="host-status" role="status"><span class="spinner" aria-hidden="true"></span><span class="status-text">Creating room…</span></p>
+      </div>
+
+      <form id="lobby-join" class="stack" hidden autocomplete="off" novalidate>
+        <label class="muted" for="join-code">Room code</label>
+        <input id="join-code" class="code-input" type="text" inputmode="text" autocapitalize="characters"
+               autocomplete="off" autocorrect="off" spellcheck="false" maxlength="4" placeholder="ABCD" aria-describedby="join-status">
+        <button class="btn btn-primary" id="btn-join" type="submit"><span class="btn-text"><b>Join game</b></span></button>
+        <p class="status" id="join-status" role="status"><span class="status-text"></span></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ───────────── IN-GAME HUD ───────────── -->
+  <section id="hud" class="screen hud" aria-label="Game">
+    <div class="hud-top">
+      <div class="turn glass" id="turn" data-player="1">
+        <span class="avatar" id="turn-avatar" data-p="1" aria-hidden="true"></span>
+        <span class="turn-text">
+          <span class="turn-name" id="turn-name">Player 1</span>
+          <span class="turn-sub" id="turn-sub">Your move</span>
+        </span>
+      </div>
+      <div class="chips">
+        <div class="chip glass" id="hud-room" hidden><span class="dot" aria-hidden="true"></span><span id="hud-room-text">ROOM</span></div>
+        <div class="chip glass" aria-label="Move counter"><span class="chip-label">Move</span><b id="move-count">0</b><span class="muted">/64</span></div>
+      </div>
+    </div>
+
+    <nav class="dock glass" aria-label="Game controls">
+      <button class="dock-btn" id="btn-undo" type="button" aria-label="Undo last move">
+        <svg class="ico" aria-hidden="true"><use href="#i-undo"/></svg><span>Undo</span>
+      </button>
+      <button class="dock-btn" id="btn-view" type="button" aria-label="Reset camera view">
+        <svg class="ico" aria-hidden="true"><use href="#i-view"/></svg><span>View</span>
+      </button>
+      <button class="dock-btn" id="btn-sound" type="button" aria-label="Sound effects" aria-pressed="true">
+        <svg class="ico" aria-hidden="true"><use href="#i-sound-on"/></svg><span>Sound</span>
+      </button>
+      <button class="dock-btn" id="btn-menu" type="button" aria-label="Back to menu">
+        <svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg><span>Menu</span>
+      </button>
+    </nav>
+  </section>
+
+  <!-- ───────────── WIN / DRAW OVERLAY ───────────── -->
+  <section id="result" class="result" aria-hidden="true" inert>
+    <div class="result-card glass" role="group" aria-labelledby="result-title">
+      <span class="result-medal" id="result-medal" aria-hidden="true"></span>
+      <h2 id="result-title" class="result-title">Player 1 wins</h2>
+      <p id="result-sub" class="result-sub">Four in a row.</p>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-rematch" type="button"><svg class="ico" aria-hidden="true"><use href="#i-refresh"/></svg><span>Rematch</span></button>
+        <button class="btn" id="btn-result-menu" type="button"><svg class="ico" aria-hidden="true"><use href="#i-menu"/></svg><span>Menu</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── DIALOGS ───────────── -->
+  <dialog id="dlg-howto" class="glass dialog" aria-labelledby="howto-title">
+    <form method="dialog" class="dialog-head">
+      <h2 id="howto-title" class="h2">How to play</h2>
+      <button class="icon-btn" aria-label="Close how to play"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </form>
+    <div class="dialog-body">
+      <ol class="steps">
+        <li><b>Take turns.</b> Drop one sphere onto any peg that isn’t full. It falls and lands on top of the stack. Each peg holds four.</li>
+        <li><b>Make four in a line.</b> Rows, columns, upright stacks, flat diagonals and 3D diagonals through the cube — 76 lines in all.</li>
+        <li><b>First to four wins.</b> If all 64 spots fill up with no line, it’s a draw.</li>
+      </ol>
+      <h3 class="h3">Players</h3>
+      <ul class="legend">
+        <li><span class="avatar" data-p="1" aria-hidden="true"></span><span><b>Player 1</b> — pearl spheres, amber glow, round badge</span></li>
+        <li><span class="avatar" data-p="2" aria-hidden="true"></span><span><b>Player 2</b> — obsidian spheres with a blue band, diamond badge</span></li>
+      </ul>
+      <h3 class="h3">Controls</h3>
+      <ul class="plain">
+        <li><b>Mouse:</b> hover a peg to preview, click to drop. Drag to orbit, scroll to zoom.</li>
+        <li><b>Touch:</b> tap a peg to preview, tap again to drop (change in Settings). One finger rotates, pinch zooms.</li>
+        <li><b>Keyboard:</b> arrow keys choose a peg, <kbd>Enter</kbd> drops, <kbd>Z</kbd> undoes, <kbd>R</kbd> resets the view.</li>
+      </ul>
+    </div>
+    <form method="dialog" class="dialog-foot"><button class="btn btn-primary" autofocus><span class="btn-text"><b>Got it</b></span></button></form>
+  </dialog>
+
+  <dialog id="dlg-confirm" class="glass dialog dialog-sm" aria-labelledby="confirm-title">
+    <form method="dialog" class="dialog-body">
+      <h2 id="confirm-title" class="h2">Leave this game?</h2>
+      <p class="muted" id="confirm-text">Your current game will be lost.</p>
+      <div class="row">
+        <button class="btn" value="stay" autofocus><span class="btn-text"><b>Keep playing</b></span></button>
+        <button class="btn btn-danger" value="leave"><span class="btn-text"><b>Leave</b></span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <noscript><p style="position:fixed;inset:0;display:grid;place-items:center;color:#fff;background:#07080d">Score Four needs JavaScript.</p></noscript>
+  <div id="boot-error" class="boot-error" role="alert" hidden>
+    <div class="glass panel">
+      <h2 class="h2">Couldn’t load the 3D engine</h2>
+      <p class="muted">Score Four needs to download Three.js once. Check your connection, then try again.</p>
+      <button class="btn btn-primary" type="button" onclick="location.reload()"><span class="btn-text"><b>Reload</b></span></button>
+    </div>
+  </div>
+
+  <script>
+    // Offline support: registered outside the module so it works even if the CDN is down.
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+      addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    }
+  </script>
+  <script type="module" src="js/main.js" onerror="document.getElementById('boot-error').hidden = false"></script>
+</body>
+</html>

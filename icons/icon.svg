@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#242c4a"/><stop offset="1" stop-color="#07080d"/></radialGradient>
+    <radialGradient id="pearl" cx="34%" cy="28%" r="80%"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#f6efe2"/><stop offset="1" stop-color="#cdbf9f"/></radialGradient>
+    <linearGradient id="obs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#343b55"/><stop offset=".36" stop-color="#232838"/><stop offset=".37" stop-color="#62a4ff"/><stop offset=".63" stop-color="#62a4ff"/><stop offset=".64" stop-color="#171a26"/><stop offset="1" stop-color="#0d0f17"/></linearGradient>
+    <linearGradient id="peg" x1="0" x2="1"><stop offset="0" stop-color="#8f96a8"/><stop offset=".45" stop-color="#f1f3f8"/><stop offset="1" stop-color="#7d8497"/></linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffb454" stop-opacity=".45"/><stop offset="1" stop-color="#ffb454" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="256" cy="250" r="190" fill="url(#glow)"/>
+  <rect x="96" y="408" width="320" height="34" rx="14" fill="#3a2418"/>
+  <rect x="96" y="408" width="320" height="8" rx="4" fill="#5a3a28"/>
+  <rect x="248" y="96" width="16" height="316" rx="8" fill="url(#peg)"/>
+  <circle cx="256" cy="360" r="48" fill="url(#pearl)"/>
+  <circle cx="256" cy="264" r="48" fill="url(#obs)"/>
+  <circle cx="256" cy="168" r="48" fill="url(#pearl)"/>
+  <circle cx="240" cy="148" r="12" fill="#fff" opacity=".7"/>
+  <circle cx="240" cy="340" r="12" fill="#fff" opacity=".7"/>
+</svg>
